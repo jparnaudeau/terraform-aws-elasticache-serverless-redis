@@ -1,3 +1,9 @@
+# AWS Elasticache Serverless Redis Terraform module - complete example
+
+* if you do not manage a default user, it's not possible to create the redis group.
+* if you do not associate a group in the serverless redis cluster, AWS will associate a default user that permits anonymous access.
+* With Redis version 7 or above, AWS provides an IAM Authentication mechanism, instead of user/password mechanism. Check the documentation [here](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html) 
+
 ## Requirements
 
 No requirements.
