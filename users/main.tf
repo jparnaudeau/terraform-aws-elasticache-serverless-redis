@@ -21,9 +21,9 @@ resource "random_password" "creds" {
 resource "aws_secretsmanager_secret" "creds" {
   for_each = { for user in var.users : user.user_id => user if user.authentication_mode == "password" }
 
-  name        = format(each.value.secret_name, each.value.user_name)
-  description = format(each.value.secret_description, each.value.user_name)
-  kms_key_id  = var.kms_key_arn
+  name        = format(each.value.secret_name, each.value.user_id)
+  description = format(each.value.secret_description, each.value.user_id)
+  kms_key_id  = var.kms_key_id
   tags        = var.tags
 }
 
@@ -52,18 +52,18 @@ resource "aws_elasticache_user" "user" {
       type = "iam"
     }
   }
-
   passwords = each.value.authentication_mode == "password" ? [random_password.creds[each.key].result] : null
 }
 
 ######################################
-# Create each redis group identified by the attribut 'admin' = true
+# Create redis group. Possible only if we have a default user
 ######################################
 resource "aws_elasticache_user_group" "group" {
+  count = local.create_default_user ? 1 : 0
 
   engine        = "REDIS"
   user_group_id = var.group
-  user_ids      = [aws_elasticache_user.default.user_id]
+  user_ids      = [aws_elasticache_user.default[0].user_id]
 
   lifecycle {
     ignore_changes = [user_ids]
@@ -75,7 +75,7 @@ resource "aws_elasticache_user_group" "group" {
 # add it into the group
 ######################################
 resource "aws_elasticache_user_group_association" "assoc" {
-  for_each      = { for user in var.users : user.user_id => user }
-  user_group_id = aws_elasticache_user_group.group.user_group_id
+  for_each      = { for user in var.users : user.user_id => user if local.create_default_user }
+  user_group_id = aws_elasticache_user_group.group[0].user_group_id
   user_id       = aws_elasticache_user.user[each.key].user_id
 }

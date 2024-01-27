@@ -28,14 +28,14 @@ No modules.
 | <a name="input_cache_usage_limits"></a> [cache\_usage\_limits](#input\_cache\_usage\_limits) | Sets the cache usage limits for storage and ElastiCache Processing Units for the cache. See configuration below. | `any` | `null` | no |
 | <a name="input_daily_snapshot_time"></a> [daily\_snapshot\_time](#input\_daily\_snapshot\_time) | The daily start time during which automated backups are initiated if automated backups are enabled. UTC Time | `string` | `"00:00"` | no |
 | <a name="input_description"></a> [description](#input\_description) | Description of elasticache serverless redis cluster | `string` | `null` | no |
-| <a name="input_elasticache_rest_encryption_key_arn"></a> [elasticache\_rest\_encryption\_key\_arn](#input\_elasticache\_rest\_encryption\_key\_arn) | The KMS Key Id to used to encrypt the underlying storage for the elasticache serverless redis cluster | `string` | n/a | yes |
+| <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | The KMS Key Id to used to encrypt the underlying storage for the elasticache serverless redis cluster | `string` | n/a | yes |
 | <a name="input_major_engine_version"></a> [major\_engine\_version](#input\_major\_engine\_version) | Redis engine version | `string` | `"7"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Elasticache Serverless Redis Cluster Name | `string` | n/a | yes |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The list of security group ids to associate to the elasticache serverless redis cluster | `list(string)` | n/a | yes |
 | <a name="input_snapshot_arns_to_restore"></a> [snapshot\_arns\_to\_restore](#input\_snapshot\_arns\_to\_restore) | The list of ARN(s) of the snapshot that the new serverless cache will be created from. Available for Redis only. | `list(string)` | `[]` | no |
 | <a name="input_snapshot_retention_limit"></a> [snapshot\_retention\_limit](#input\_snapshot\_retention\_limit) | The number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. between 0-35. O means no backups | `number` | `31` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of VPC Subnet IDs where the elasticache serverless redis cluster will be deployed | `list(string)` | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | A list of tags to put on resources | `map(string)` | n/a | yes |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of VPC Subnet IDs where the elasticache serverless redis cluster will be deployed | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | A list of tags to put on resources | `map(string)` | `{}` | no |
 | <a name="input_user_group_id"></a> [user\_group\_id](#input\_user\_group\_id) | (Optional) The identifier of the UserGroup to be associated with the serverless cache. Available for Redis only. Default is NULL. | `string` | `null` | no |
 
 ## Outputs

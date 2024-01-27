@@ -32,10 +32,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_default_user"></a> [default\_user](#input\_default\_user) | The default user referenced into the redis group | <pre>object({<br>    user_id             = string<br>    user_name           = string<br>    access_string       = string<br>    secret_description  = string<br>    secret_name         = string<br>    authentication_mode = string<br>  })</pre> | n/a | yes |
+| <a name="input_default_user"></a> [default\_user](#input\_default\_user) | The default user referenced into the redis group | <pre>object({<br>    user_id             = string<br>    user_name           = string<br>    access_string       = string<br>    secret_description  = string<br>    secret_name         = string<br>    authentication_mode = string<br>  })</pre> | `null` | no |
 | <a name="input_group"></a> [group](#input\_group) | The Group to create and to associate to the redis serverless cluster | `string` | n/a | yes |
-| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The KMS Key Arn to use for encrpyting the password of redis users | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | A list of tags to put on resources | `map(string)` | n/a | yes |
+| <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | The KMS Key Id to use to encrypt secrets in AWS SecretsManager for redis users defined with authentication\_mode = 'password' | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A list of tags to put on resources | `map(string)` | `{}` | no |
 | <a name="input_users"></a> [users](#input\_users) | The List of Users to create inside the Elasticache Redis Cluster | <pre>list(object({<br>    user_id             = string<br>    user_name           = string<br>    access_string       = string<br>    secret_description  = string<br>    secret_name         = string<br>    authentication_mode = string<br>  }))</pre> | `[]` | no |
 
 ## Outputs

@@ -1,6 +1,15 @@
+#######################################
+# Redis engine Variables
+#######################################
 variable "name" {
   type        = string
   description = "Elasticache Serverless Redis Cluster Name"
+}
+
+variable "description" {
+  type        = string
+  default     = null
+  description = "Description of elasticache serverless redis cluster"
 }
 
 variable "major_engine_version" {
@@ -9,6 +18,15 @@ variable "major_engine_version" {
   description = "Redis engine version"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "A list of tags to put on resources"
+  default     = {}
+}
+
+#######################################
+# Backups Variables
+#######################################
 variable "daily_snapshot_time" {
   type        = string
   default     = "00:00"
@@ -21,26 +39,12 @@ variable "snapshot_retention_limit" {
   description = "The number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. between 0-35. O means no backups"
 }
 
-variable "description" {
-  type        = string
-  default     = null
-  description = "Description of elasticache serverless redis cluster"
-}
-
+#######################################
+# Network & Security Variables
+#######################################
 variable "subnet_ids" {
   type        = list(string)
   description = "List of VPC Subnet IDs where the elasticache serverless redis cluster will be deployed"
-  default     = []
-}
-
-variable "tags" {
-  type        = map(string)
-  description = "A list of tags to put on resources"
-}
-
-variable "elasticache_rest_encryption_key_arn" {
-  description = "The KMS Key Id to used to encrypt the underlying storage for the elasticache serverless redis cluster"
-  type        = string
 }
 
 variable "security_group_ids" {
@@ -48,6 +52,14 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
+variable "kms_key_id" {
+  description = "The KMS Key Id to used to encrypt the underlying storage for the elasticache serverless redis cluster"
+  type        = string
+}
+
+#######################################
+# Optional Variables
+#######################################
 variable "cache_usage_limits" {
   description = "Sets the cache usage limits for storage and ElastiCache Processing Units for the cache. See configuration below."
   type        = any

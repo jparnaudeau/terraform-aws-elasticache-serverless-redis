@@ -4,6 +4,7 @@
 variable "tags" {
   type        = map(string)
   description = "A list of tags to put on resources"
+  default     = {}
 }
 
 
@@ -20,6 +21,7 @@ variable "default_user" {
     secret_name         = string
     authentication_mode = string
   })
+  default = null
 }
 
 
@@ -39,9 +41,10 @@ variable "users" {
   default = []
 }
 
-variable "kms_key_arn" {
-  description = "The KMS Key Arn to use for encrpyting the password of redis users"
+variable "kms_key_id" {
+  description = "The KMS Key Id to use to encrypt secrets in AWS SecretsManager for redis users defined with authentication_mode = 'password'"
   type        = string
+  default     = null
 }
 
 #######################################
