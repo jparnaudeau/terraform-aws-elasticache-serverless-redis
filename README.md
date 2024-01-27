@@ -1,3 +1,112 @@
+# AWS Elasticache Serverless Redis Terraform module
+
+Terraform module which creates AWS Elasticache Serverless Redis Cluster provided by Terraform AWS provider.
+
+This module covers as well, the deployment of default user, users & group.
+
+## Usage
+
+### Deploy the Elasticache Serverless Redis cluster
+
+```hcl
+module "redis_serverless" {
+  source = "../../"
+
+  name        = "myapp-dev-elasticache-redis"
+  description = "Elasticache Serverless for redis cluster"
+
+  # Backups & retention
+  daily_snapshot_time      = "22:00"
+  snapshot_retention_limit = 10
+
+  # Network & Security
+  subnet_ids         = ["subnet-12345678901234567", "subnet-31415926535897932"]
+  security_group_ids = ["sg-01123581321345589"]
+  kms_key_id         = aws_kms_key.key.id
+
+  # tagging
+  tags = var.tags
+
+  # cache usage limits
+  cache_usage_limits = {
+    # data_storage = {
+    #   maximum = 100
+    #   unit    = "GB"
+    # }
+    ecpu_per_second = {
+      maximum = 5
+    }
+  }
+}
+```
+
+### Deploy users & group
+
+```hcl
+module "redis_users" {
+  source = "../..//users"
+
+  # tags parameters
+  tags = var.tags
+
+  # set the KMS Key to use with AWS SecretsManager if you have redis user defined with authentication_mode = 'password'
+  kms_key_id = aws_kms_key.key.id
+
+  # the default user
+  default_user = var.default_user
+
+  # List of users to create
+  users = var.users
+
+  # redis group
+  group = var.group
+}
+```
+
+and the content of the `terraform.tfvars` : 
+
+```hcl
+
+# define default user
+default_user = {
+  user_id             = "default-myapp-user"
+  user_name           = "default"
+  access_string       = "on ~acme::* -@all +@read +@write +cluster|nodes +@connection"
+  group               = "myredis-group"
+  secret_description  = "The Secret containing credentials for the %s on Elasticache Redis Serverless Cluster"  # %s will be replace by the user_id value
+  secret_name         = "/dev/myapp/redis/%s" # %s will be replace by the user_id value
+  authentication_mode = "password"
+}
+
+# define the list of users to create
+users = [
+  {
+    user_id             = "web-dev-redis"
+    user_name           = "web-dev-redis"
+    access_string       = "on ~myapp::* -@all +@read +cluster|nodes"
+    secret_description  = "Credentials for the user %s on Elasticache Redis Serverless Cluster" # keep one %s. It will be replace by the user_id value
+    secret_name         = "/dev/myapp/redis/%s" # keep one %s. # It will be replace by the user_id value
+    authentication_mode = "iam"
+  },
+  {
+    user_id             = "app-dev-redis"
+    user_name           = "app-dev-redis"
+    access_string       = "on ~myapp::* -@all +@read +@write +cluster|nodes +@connection"
+    secret_description  = "Credentials for the user %s on Elasticache Redis Serverless Cluster"
+    secret_name         = "/dev/myapp/redis/%s"
+    authentication_mode = "password"
+  },
+]
+
+# define the group 
+group = "dev-myapp-redis-group"
+```
+
+## Examples
+
+- [Complete](https://github.com/jparnaudeau/terraform-aws-elasticache-serverless-redis/tree/master/examples/complete) - Complete example which creates Elasticache Serverless Redis Cluster + default user + users + group.
+
+
 ## Requirements
 
 | Name | Version |
