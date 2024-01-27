@@ -42,8 +42,8 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | <a name="output_arn"></a> [arn](#output\_arn) | Elasticache Serverless Redis cluster ARN. |
-| <a name="output_elasticache_redis_group"></a> [elasticache\_redis\_group](#output\_elasticache\_redis\_group) | n/a |
-| <a name="output_elasticache_users"></a> [elasticache\_users](#output\_elasticache\_users) | n/a |
+| <a name="output_elasticache_redis_group"></a> [elasticache\_redis\_group](#output\_elasticache\_redis\_group) | Informations related to the redis group |
+| <a name="output_elasticache_users"></a> [elasticache\_users](#output\_elasticache\_users) | List of redis users created |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Represents the information required for client programs to connect to the Elasticache Serverless Redis cluster. |
 | <a name="output_full_engine_version"></a> [full\_engine\_version](#output\_full\_engine\_version) | The name and version number of the engine the serverless cache is compatible with. |
 | <a name="output_major_engine_version"></a> [major\_engine\_version](#output\_major\_engine\_version) | The version number of the engine the serverless cache is compatible with. |

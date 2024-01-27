@@ -24,9 +24,11 @@ output "major_engine_version" {
 }
 
 output "elasticache_redis_group" {
-  value = module.redis_users.elasticache_redis_group
+  value       = module.redis_users.elasticache_redis_group
+  description = "Informations related to the redis group"
 }
 
 output "elasticache_users" {
-  value = module.redis_users.elasticache_users
+  value       = module.redis_users.elasticache_users
+  description = "List of redis users created"
 }
