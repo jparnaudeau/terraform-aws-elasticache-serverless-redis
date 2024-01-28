@@ -10,7 +10,8 @@ This module covers as well, the deployment of default user, users & group.
 
 ```hcl
 module "redis_serverless" {
-  source = "../../"
+  source  = "jparnaudeau/elasticache-serverless-redis/aws"
+  version = "1.0.0"
 
   name        = "myapp-dev-elasticache-redis"
   description = "Elasticache Serverless for redis cluster"
@@ -44,7 +45,8 @@ module "redis_serverless" {
 
 ```hcl
 module "redis_users" {
-  source = "../..//users"
+  source  = "jparnaudeau/elasticache-serverless-redis/aws//users"
+  version = "1.0.0"
 
   # tags parameters
   tags = var.tags

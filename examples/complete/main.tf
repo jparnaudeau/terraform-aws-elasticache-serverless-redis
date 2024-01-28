@@ -10,7 +10,9 @@ resource "aws_kms_key" "key" {
 # Deploy Redis users & group
 ###############################
 module "redis_users" {
-  source = "../..//users"
+  #source = "../..//users"
+  source  = "jparnaudeau/elasticache-serverless-redis/aws//users"
+  version = "1.0.0"
 
   # tags parameters
   tags = var.tags
@@ -32,7 +34,9 @@ module "redis_users" {
 # Deploy The Elasticache Serverless Redis Cluster
 ###############################
 module "redis_serverless" {
-  source = "../../"
+  #source = "../../"
+  source  = "jparnaudeau/elasticache-serverless-redis/aws"
+  version = "1.0.0"
 
   name        = "myapp-dev-elasticache-redis"
   description = "Elasticache Serverless for redis cluster"
