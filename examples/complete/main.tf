@@ -65,7 +65,7 @@ module "redis_serverless" {
   }
 
   # Associate the Redis group for iam authentication
-  #user_group_id = module.redis_users.elasticache_redis_group.id
+  user_group_id = module.redis_users.elasticache_redis_group.id
 
   # use the snapshot to initiate data cluster
   #snapshot_arns_to_restore = [""]
