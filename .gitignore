@@ -12,8 +12,6 @@
 
 .project
 
-*.zip
-
 **/trace.txt
 
 **/*Zone.Identifier

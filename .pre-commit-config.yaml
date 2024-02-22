@@ -1,0 +1,29 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: no-commit-to-branch
+        args:
+          - --branch=main
+
+  - repo: https://gitlab.com/smop/pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: check-gitlab-ci
+          
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.22
+    hooks:
+      - id: terraform-fmt
+      - id: terraform-validate
+      - id: shellcheck
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.27.0
+    hooks:
+      - id: terraform_tflint
+        args:
+          - 'args=--deep'
+          - 'args=--minimum-failure-severity=error'
+

@@ -10,9 +10,9 @@ resource "aws_kms_key" "key" {
 # Deploy Redis users & group
 ###############################
 module "redis_users" {
-  #source = "../..//users"
-  source  = "jparnaudeau/elasticache-serverless-redis/aws//users"
-  version = "1.0.0"
+  source = "../..//users"
+  # source  = "jparnaudeau/elasticache-serverless-redis/aws//users"
+  # version = "1.1.0"
 
   # tags parameters
   tags = var.tags
@@ -34,9 +34,9 @@ module "redis_users" {
 # Deploy The Elasticache Serverless Redis Cluster
 ###############################
 module "redis_serverless" {
-  #source = "../../"
-  source  = "jparnaudeau/elasticache-serverless-redis/aws"
-  version = "1.0.0"
+  source = "../../"
+  # source  = "jparnaudeau/elasticache-serverless-redis/aws"
+  # version = "1.0.0"
 
   name        = "myapp-dev-elasticache-redis"
   description = "Elasticache Serverless for redis cluster"
@@ -71,4 +71,60 @@ module "redis_serverless" {
   #snapshot_arns_to_restore = [""]
 }
 
+###############################
+# Deploy a Security Group for our Lambda
+# and open the flow on port 6379 & 6380
+###############################
+module "security_group" {
+  #checkov:skip=CKV2_AWS_5: "Ensure that Security Groups are attached to an other resource"
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 4.0"
 
+  name        = "myapp-auto-password-rotation-sg"
+  description = "Securtiy Group associated to the Lambda for the password rotation"
+  vpc_id      = "vpc-31415926535897932"
+
+  # egress
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 443
+      to_port     = 443
+      protocol    = 6
+      description = "Allow Outbound TCP Communication on AWS Elasticache API"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
+  tags = {
+    Name = "myapp-auto-password-rotation-sg"
+  }
+}
+
+###############################
+# Deploy The lambda function ready to rotate secrets
+###############################
+module "redis-password-rotation" {
+  source = "../..//automatic-rotation"
+  # source  = "jparnaudeau/elasticache-serverless-redis/aws//automatic-rotation"
+  # version = "1.1.0"
+
+  depends_on = [module.redis_users]
+
+  name_patern = "myapp-auto-password-rotation-%s" # used in lambda name & role name. Keep one %s 
+  kms_key_id  = aws_kms_key.key.id
+
+  subnet_ids         = ["subnet-31415926535897932"]
+  security_group_ids = [module.security_group.security_group_id]
+
+  # you can rotate password only for redis users defined with 'authentication_mode' = password
+  secrets = [for k, v in { for user in var.users : user.user_id => user } :
+    {
+      secret_id       = format(v.secret_name, k)
+      secret_arn      = module.redis_users.elasticache_users["app-dev-redis"].secret_arn
+      redis_user_arn  = module.redis_users.elasticache_users["app-dev-redis"].arn
+      redis_user_name = k
+      rotation_days   = 60
+    } if v.authentication_mode == "password"
+  ]
+
+}
