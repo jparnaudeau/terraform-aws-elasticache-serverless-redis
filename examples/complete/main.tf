@@ -73,14 +73,15 @@ module "redis_serverless" {
 
 ###############################
 # Deploy a Security Group for our Lambda
-# and open the flow on port 6379 & 6380
+# and open the flow in outbound on HTTPS
+# Lambda will invoke secretsManager & Elasticache AWS APIs.
 ###############################
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
   name        = "myapp-auto-password-rotation-sg"
-  description = "Securtiy Group associated to the Lambda for the password rotation"
+  description = "Security Group associated to the Lambda for the password rotation"
   vpc_id      = "vpc-31415926535897932"
 
   # egress
