@@ -2,7 +2,18 @@
 
 Terraform module which creates AWS Elasticache Serverless Redis Cluster provided by Terraform AWS provider.
 
-This module covers as well, the deployment of default user, users & group.
+This module covers as well : 
+
+* the deployment of default user, users & group.
+* the deployment of a lambda to perform an automated rotation for redis user.
+
+## Versions
+
+| Version | Description |
+|---------|-------------|
+| 1.0.0| First version of the module.|
+| 1.1.0| Add sub-module `automatic-rotation` to deploy a lambda to manage the automatic rotation on the redis users. |
+
 
 ## Usage
 
@@ -104,9 +115,57 @@ users = [
 group = "dev-myapp-redis-group"
 ```
 
+### Deploy Lambda for Automatic Rotation
+
+```hcl
+module "redis-password-rotation" {
+  source = "../..//automatic-rotation"
+  # source  = "jparnaudeau/elasticache-serverless-redis/aws//automatic-rotation"
+  # version = "1.1.0"
+
+  depends_on = [module.redis_users]
+
+  name_patern = "myapp-auto-password-rotation-%s" # used in lambda name & role name. Keep one %s 
+  kms_key_id  = aws_kms_key.key.id
+
+  subnet_ids         = ["subnet-31415926535897932"]
+  security_group_ids = [module.security_group.security_group_id]
+
+  # you can rotate password only for redis users defined with 'authentication_mode' = password
+  secrets = [
+    {
+      secret_id       = "/redis/dev/myapp/test-auto-rotation"
+      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789101:secret:/redis/dev/myapp/test-auto-rotation-0abcdef"
+      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789101:user:test-auto-rotation"
+      redis_user_name = "test-auto-rotation"
+      rotation_days   = 60
+    },
+    {
+      secret_id       = "/redis/dev/myapp/test-auto-rotation2"
+      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789101:secret:/redis/dev/myapp/test-auto-rotation2-6abcdef"
+      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789101:user:test-auto-rotation2"
+      redis_user_name = "test-auto-rotation2"
+      rotation_days   = 60
+    },
+  ]
+
+}
+
+```
+
+> The lambda code used in this module [automatic-rotation/functions/lambda_function.py](automatic-rotation/functions/) is retrieved from the official AWS Sample code : 
+https://github.com/aws-samples/aws-secrets-manager-rotation-lambdas/blob/master/SecretsManagerElasticacheUserRotation/lambda_function.py
+
+> In the initial code provided by AWS, environment variables `SECRET_ARN` & `USER_NAME` are passed to the lambda function environment variables. These variables permits to verifiy that the secret that will be rotated correspond to the `SECRET_ARN` & that the redis user correspond to the `USER_NAME`. This design implies to deploy one lambda per secret.
+
+> I updated the initial code by using `SECRET_ARNS` & `USER_NAMES` to manage a list of secret ARNs and a list of usernames. It permits to deploy only one lambda, triggered by SecretsManager for each of the secrets for which we want rotate the value.
+
+> during the tests, it could be possible that the lambda fails. It causes an unexpected state in your secret in SecretsManager. You can find a python script [automatic-rotation/utils/delete-awspending-version-of-secret.py](automatic-rotation/utils) to delete the version `AWSPENDING` in your secret. Do it only in case of failure.
+
+
 ## Examples
 
-- [Complete](https://github.com/jparnaudeau/terraform-aws-elasticache-serverless-redis/tree/master/examples/complete) - Complete example which creates Elasticache Serverless Redis Cluster + default user + users + group.
+- [Complete](https://github.com/jparnaudeau/terraform-aws-elasticache-serverless-redis/tree/master/examples/complete) - Complete example which creates Elasticache Serverless Redis Cluster + default user + users + group + the Lambda for automatic password rotation for redis users.
 
 
 ## Requirements

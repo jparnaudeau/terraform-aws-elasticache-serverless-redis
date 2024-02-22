@@ -32,3 +32,8 @@ output "elasticache_users" {
   value       = module.redis_users.elasticache_users
   description = "List of redis users created"
 }
+
+output "lambda-rotation-infos" {
+  value       = module.redis-password-rotation.lambda-rotation-infos
+  description = "Informations on the Lambda Auto Rotate Redis Password"
+}

@@ -36,9 +36,9 @@ resource "aws_secretsmanager_secret_version" "user_secrets_version" {
 
   secret_id = aws_secretsmanager_secret.default[0].id
   secret_string = jsonencode({
-    username  = var.default_user.user_name
-    password  = random_password.default[0].result
-    user_arn  = aws_elasticache_user.default[0].arn
+    username = var.default_user.user_name
+    password = random_password.default[0].result
+    user_arn = aws_elasticache_user.default[0].arn
 
     }
   )

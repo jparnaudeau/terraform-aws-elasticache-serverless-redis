@@ -32,9 +32,9 @@ resource "aws_secretsmanager_secret_version" "creds" {
   secret_id = aws_secretsmanager_secret.creds[each.key].id
 
   secret_string = jsonencode({
-    username  = each.value.user_name
-    password  = random_password.creds[each.key].result
-    user_arn  = aws_elasticache_user.user[each.key].arn
+    username = each.value.user_name
+    password = random_password.creds[each.key].result
+    user_arn = aws_elasticache_user.user[each.key].arn
     }
   )
 }
