@@ -135,15 +135,15 @@ module "redis-password-rotation" {
   secrets = [
     {
       secret_id       = "/redis/dev/myapp/test-auto-rotation"
-      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789101:secret:/redis/dev/myapp/test-auto-rotation-0abcdef"
-      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789101:user:test-auto-rotation"
+      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789100:secret:/redis/dev/myapp/test-auto-rotation-0abcdef"
+      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789100:user:test-auto-rotation"
       redis_user_name = "test-auto-rotation"
       rotation_days   = 60
     },
     {
       secret_id       = "/redis/dev/myapp/test-auto-rotation2"
-      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789101:secret:/redis/dev/myapp/test-auto-rotation2-6abcdef"
-      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789101:user:test-auto-rotation2"
+      secret_arn      = "arn:aws:secretsmanager:eu-west-1:123456789100:secret:/redis/dev/myapp/test-auto-rotation2-6abcdef"
+      redis_user_arn  = "arn:aws:elasticache:eu-west-1:123456789100:user:test-auto-rotation2"
       redis_user_name = "test-auto-rotation2"
       rotation_days   = 60
     },

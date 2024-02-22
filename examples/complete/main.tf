@@ -36,7 +36,7 @@ module "redis_users" {
 module "redis_serverless" {
   source = "../../"
   # source  = "jparnaudeau/elasticache-serverless-redis/aws"
-  # version = "1.0.0"
+  # version = "1.1.0"
 
   name        = "myapp-dev-elasticache-redis"
   description = "Elasticache Serverless for redis cluster"
@@ -76,7 +76,6 @@ module "redis_serverless" {
 # and open the flow on port 6379 & 6380
 ###############################
 module "security_group" {
-  #checkov:skip=CKV2_AWS_5: "Ensure that Security Groups are attached to an other resource"
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
